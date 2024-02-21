@@ -49,15 +49,18 @@ class RegistrationPage:
         return self
 
     def set_hobby(self, value):
-        browser.all('.custom-checkbox').element_by(have.exact_text(value)).click()
+        browser.all('.custom-checkbox').element_by(have.exact_text(value)) \
+            .perform(command.js.scroll_into_view).click()
         return self
 
     def set_photo(self, name):
-        browser.element('#uploadPicture').send_keys(path(name))
+        browser.element('#uploadPicture').perform(command.js.scroll_into_view) \
+            .send_keys(path(name))
         return self
 
     def fill_current_address(self, value):
-        browser.element('#currentAddress').type(value)
+        browser.element('#currentAddress').perform(command.js.scroll_into_view) \
+            .type(value)
         return self
 
     def set_state(self, value):
