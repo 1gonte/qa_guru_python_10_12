@@ -15,12 +15,10 @@ def load_env():
 
 
 @pytest.fixture(scope='function', autouse=True)
-def browser_management():
-
-    browser.config.base_url = 'https://demoqa.com/automation-practice-form'
-    browser.config.timeout = 6.0
-    browser.config.window_height = 1000
-    browser.config.window_width = 1800
+def setup_browser(request):
+    browser.config.base_url = "https://demoqa.com/automation-practice-form"
+    browser.config.window_width = 1920
+    browser.config.window_height = 1080
 
     options = Options()
     selenoid_capabilities = {
@@ -31,23 +29,19 @@ def browser_management():
             "enableVideo": True
         }
     }
-
     options.capabilities.update(selenoid_capabilities)
-
     login = os.getenv('LOGIN')
     password = os.getenv('PASSWORD')
-
     driver = webdriver.Remote(
         command_executor=f"https://{login}:{password}@selenoid.autotests.cloud/wd/hub",
         options=options)
 
     browser.config.driver = driver
-
     yield browser
 
-    attach.add_html(browser)
     attach.add_screenshot(browser)
     attach.add_logs(browser)
+    attach.add_html(browser)
     attach.add_video(browser)
 
     browser.quit()
